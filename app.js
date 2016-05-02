@@ -29,4 +29,20 @@ $(document).ready(function() {
     L.control.layers(base, overlay, { collapsed: false }).addTo(_map);
 
     _map.setView(view.center, view.zoom);
+
+    _map.on('click', function(e) {
+        _map.clicked = true;
+
+        setTimeout(function(){
+            if (_map.clicked){
+                console.log(e.latlng);
+            }
+         }, 300);
+    });
+
+    _map.on('dblclick', function(event){
+        _map.clicked = false;
+        _map.zoomIn();
+    });
+
 });
