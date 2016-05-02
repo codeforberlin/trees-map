@@ -9,7 +9,7 @@ $(document).ready(function() {
     };
 
     var base = {
-        'Open Street Map': L.tileLayer("http://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        'Open Street Map': L.tileLayer("https://trees.codefor.de/tiles/osm/{z}/{x}/{y}.png", {
             "attribution": "Map data © 2012 OpenStreetMap contributors",
             "minZoom": 8,
             "maxZoom": 20
@@ -17,7 +17,7 @@ $(document).ready(function() {
     };
 
     var overlay = {
-        'Alle Bäume': L.tileLayer("http://trees.codefor.de/tiles/trees/{z}/{x}/{y}.png", {
+        'Alle Bäume': L.tileLayer("https://trees.codefor.de/tiles/trees/{z}/{x}/{y}.png", {
             "attribution": "Geoportal Berlin / Baumbestand Berlin",
             "minZoom": 8,
             "maxZoom": 20
