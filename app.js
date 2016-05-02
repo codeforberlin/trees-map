@@ -1,4 +1,4 @@
-var _map;
+var _map = null, _marker = null;
 
 $(document).ready(function() {
     _map = L.map('map');
@@ -35,7 +35,34 @@ $(document).ready(function() {
 
         setTimeout(function(){
             if (_map.clicked){
-                console.log(e.latlng);
+                $.ajax({
+                    url: 'https://trees.codefor.de/api/trees/',
+                    data: {
+                        dist: 5,
+                        point: e.latlng.lng + ',' + e.latlng.lat
+                    },
+                    success: function(response) {
+                        if (response.count > 0) {
+                            var feature = response.features[0];
+
+                            var lat = feature.geometry.coordinates[1],
+                                lon = feature.geometry.coordinates[0];
+
+
+                            var html = '';
+                            $.each(feature.properties, function(key, value) {
+                                html += '<div><strong>' + key + '</strong> ' + value + '/<div>';
+                            });
+
+                            if (_marker !== null) {
+                                _map.removeLayer(_marker);
+                            }
+
+                            _marker = L.marker([lat, lon]).addTo(_map);
+                            _marker.bindPopup(html).openPopup();
+                        }
+                    }
+                });
             }
          }, 300);
     });
