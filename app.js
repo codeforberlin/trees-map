@@ -25,6 +25,7 @@ $(document).ready(function() {
     };
 
     base['Open Street Map'].addTo(_map);
+    overlay['Alle Bäume'].addTo(_map);
 
     L.control.layers(base, overlay, { collapsed: false }).addTo(_map);
 
