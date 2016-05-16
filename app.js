@@ -1,4 +1,4 @@
-var _map = null, _marker = null;
+var _map = null, _marker = null, _names = {};
 
 $(document).ready(function() {
     _map = L.map('map');
@@ -39,7 +39,7 @@ $(document).ready(function() {
                 $.ajax({
                     url: 'https://trees.codefor.de/api/trees/',
                     data: {
-                        dist: 5,
+                        dist: 10,
                         point: e.latlng.lng + ',' + e.latlng.lat
                     },
                     success: function(response) {
@@ -49,11 +49,22 @@ $(document).ready(function() {
                             var lat = feature.geometry.coordinates[1],
                                 lon = feature.geometry.coordinates[0];
 
-
-                            var html = '';
+                            var headline;
+                            var list = [];
                             $.each(feature.properties, function(key, value) {
-                                html += '<div><strong>' + key + '</strong> ' + value + '/<div>';
+                                if (key === 'species_german') {
+                                    headline = value;
+                                } else {
+                                    var string = '<td><strong>' + _names[key].label.de + '</strong></td>';
+                                    string += '<td>' + value + '</td>';
+                                    list.push(string);
+                                }
                             });
+
+                            var html = '<h4>' + headline + '</h4>';
+                            html += '<table><tr>';
+                            html += list.join('</tr><tr>');
+                            html += '</tr></table>';
 
                             if (_marker !== null) {
                                 _map.removeLayer(_marker);
@@ -73,4 +84,10 @@ $(document).ready(function() {
         _map.zoomIn();
     });
 
+    $.ajax({
+        url: 'https://trees.codefor.de/names/column-names.json',
+        success: function(response) {
+            _names = response;
+        }
+    });
 });
