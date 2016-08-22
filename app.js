@@ -17,7 +17,22 @@ $(document).ready(function() {
     };
 
     var overlay = {
-        'Alle Bäume': L.tileLayer("https://trees.codefor.de/tiles/trees/{z}/{x}/{y}.png", {
+        'Straßenbäume': L.tileLayer("https://trees.codefor.de/tiles/strassenbaeume/{z}/{x}/{y}.png", {
+            "attribution": "Geoportal Berlin / Baumbestand Berlin",
+            "minZoom": 8,
+            "maxZoom": 20
+        }),
+        'Anlagenbäume': L.tileLayer("https://trees.codefor.de/tiles/anlagenbaeume/{z}/{x}/{y}.png", {
+            "attribution": "Geoportal Berlin / Baumbestand Berlin",
+            "minZoom": 8,
+            "maxZoom": 20
+        }),
+        'Birken': L.tileLayer("https://trees.codefor.de/tiles/birken/{z}/{x}/{y}.png", {
+            "attribution": "Geoportal Berlin / Baumbestand Berlin",
+            "minZoom": 8,
+            "maxZoom": 20
+        }),
+        'Kastanien': L.tileLayer("https://trees.codefor.de/tiles/kastanien/{z}/{x}/{y}.png", {
             "attribution": "Geoportal Berlin / Baumbestand Berlin",
             "minZoom": 8,
             "maxZoom": 20
@@ -25,7 +40,9 @@ $(document).ready(function() {
     };
 
     base['Open Street Map'].addTo(_map);
-    overlay['Alle Bäume'].addTo(_map);
+
+    overlay['Straßenbäume'].addTo(_map);
+    overlay['Anlagenbäume'].addTo(_map);
 
     L.control.layers(base, overlay, { collapsed: false }).addTo(_map);
 
