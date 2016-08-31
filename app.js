@@ -48,6 +48,24 @@ $(document).ready(function() {
 
     _map.setView(view.center, view.zoom);
 
+    function getColumnName(key) {
+        if( undefined !== _names[key]) {
+            return _names[key].label.de;
+        }
+
+		var ret = '&lt;' + key + '&gt;';
+
+		$.each(_names, function(identifier, properties) {
+            $.each(properties.alternatives, function(id, value) {
+                if((key === value) || (key.toLowerCase() === value)) {
+                    ret = _names[identifier].label.de;
+                }
+            });
+        });
+
+        return ret;
+    }
+
     _map.on('click', function(e) {
         _map.clicked = true;
 
@@ -72,7 +90,7 @@ $(document).ready(function() {
                                 if (key === 'species_german') {
                                     headline = value;
                                 } else {
-                                    var string = '<td><strong>' + _names[key].label.de + '</strong></td>';
+                                    var string = '<td><strong>' + getColumnName(key) + '</strong></td>';
                                     string += '<td>' + value + '</td>';
                                     list.push(string);
                                 }
