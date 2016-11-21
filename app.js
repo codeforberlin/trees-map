@@ -3,6 +3,13 @@ var _map = null, _marker = null, _names = {};
 $(document).ready(function() {
     _map = L.map('map');
 
+    $.ajax({
+        url: 'https://trees.codefor.de/names/column-names.json',
+        success: function(response) {
+            _names = response;
+        }
+    });
+
     var view = {
         "center": [52.51,13.37628],
         "zoom": 15
@@ -54,42 +61,41 @@ $(document).ready(function() {
         setTimeout(function(){
             if (_map.clicked){
                 $.ajax({
-                    url: 'https://trees.codefor.de/api/trees/',
+                    url: 'https://trees.codefor.de/api/trees/closest/',
                     data: {
-                        dist: 10,
                         point: e.latlng.lng + ',' + e.latlng.lat
                     },
-                    success: function(response) {
-                        if (response.count > 0) {
-                            var feature = response.features[0];
+                    success: function(feature) {
+                        var lat = feature.geometry.coordinates[1],
+                            lon = feature.geometry.coordinates[0];
 
-                            var lat = feature.geometry.coordinates[1],
-                                lon = feature.geometry.coordinates[0];
+                        var headline;
+                        var list = [];
 
-                            var headline;
-                            var list = [];
-                            $.each(feature.properties, function(key, value) {
-                                if (key === 'species_german') {
-                                    headline = value;
-                                } else {
+                        $.each(feature.properties, function(key, value) {
+                            if (key === 'species_german') {
+                                headline = value;
+                            } else {
+                                if (typeof _names[key] !== 'undefined') {
                                     var string = '<td><strong>' + _names[key].label.de + '</strong></td>';
                                     string += '<td>' + value + '</td>';
                                     list.push(string);
                                 }
-                            });
-
-                            var html = '<h4>' + headline + '</h4>';
-                            html += '<table><tr>';
-                            html += list.join('</tr><tr>');
-                            html += '</tr></table>';
-
-                            if (_marker !== null) {
-                                _map.removeLayer(_marker);
                             }
+                        });
 
-                            _marker = L.marker([lat, lon]).addTo(_map);
-                            _marker.bindPopup(html).openPopup();
+                        var html = '<h4>' + headline + '</h4>';
+                        html += '<table><tr>';
+                        html += list.join('</tr><tr>');
+                        html += '</tr></table>';
+
+                        if (_marker !== null) {
+                            _map.removeLayer(_marker);
                         }
+
+                        _marker = L.marker([lat, lon]).addTo(_map);
+                        _marker.bindPopup(html).openPopup();
+
                     }
                 });
             }
